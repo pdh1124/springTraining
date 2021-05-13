@@ -40,13 +40,14 @@ public class BoardServiceImp implements BoardService {
 	@Override
 	public boolean remove(Long bno) {
 		log.info("remove......" + bno);
-		return mapper.delete(bno) == 1;
+		return (mapper.delete(bno)) == 1;
+		//return mapper.delete(bno) == 1;
 	}
 
 	@Override
 	public List<BoardVO> getList() {
 		log.info("getList......");
 		return mapper.getList();
-	}
+	}	
 
 }
