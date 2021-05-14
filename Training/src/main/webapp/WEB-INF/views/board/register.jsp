@@ -25,8 +25,8 @@
 						<input class="form-control" name="writer">
 					</div>
 					
-					<button type="submit" class="btn btn-default">Submit Button</button>
-					<button type="reset" class="btn btn-default">Reset Button</button>					
+					<button type="submit" class="btn btn-success">수정 버튼</button>
+					<button type="reset" class="btn btn-danger">초기화 버튼</button>					
 				</form>
 			</div>
 		</div>
