@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.co.domain.BoardVO;
+import kr.co.domain.Criteria;
 import kr.co.service.BoardService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -24,9 +25,9 @@ public class BoardController {
 	
 	//get방식으로 list를 받을 때에 글 목록
 	@GetMapping("/list")
-	public void list(Model model) {
-		log.info("list");
-		model.addAttribute("list", service.getList());
+	public void list(Model model, Criteria cri) {
+		log.info("list" + cri);
+		model.addAttribute("list", service.getList(cri));
 	}
 	
 	@GetMapping("/register")
