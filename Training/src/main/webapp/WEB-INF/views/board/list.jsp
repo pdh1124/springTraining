@@ -29,7 +29,7 @@
                 	<c:forEach var="board" items="${list }">
 	                	<tr>
 	                    	<td><c:out value="${board.bno }" /></td>
-	                    	<td><a href="/board/get?bno=${board.bno }"><c:out value="${board.title }" /></a></td>	              
+	                    	<td><a href="${board.bno }" class="move"><c:out value="${board.title }" /></a></td>	              
 	                    	<td><c:out value="${board.writer }" /></td>
 	                    	<td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.regdate }" /></td>
 	                    	<td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.updateDate }" /></td>
@@ -40,6 +40,30 @@
         </div>
     </div>
 </div>
+
+<!-- 페이징 -->
+<div>
+	<ul class="pagination justify-content-center">
+		<c:if test="${pageMaker.prev }">
+			<li class="page-item previous"><a href="${pageMaker.startPage-1 }">&lt;</a></li>
+		</c:if>
+		<c:forEach var="num" begin="${pageMaker.startPage }" end="${pageMaker.endPage }">
+			<li class="page-item ${pageMaker.cri.pageNum == num?'active':'' }">
+				<a href="${num }" class="page-link">${num }</a>
+			</li>
+		</c:forEach>
+		<c:if test="${pageMaker.naxt }">
+			<li class="page-item next"><a href="${pageMaker.endPage+1 }">&gt;</a></li>
+		</c:if>
+	</ul>
+</div>
+
+<!-- 히든값으로 넘길 정보 -->
+<form id="actionForm" action="/board/list" method="get">
+	<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum }" />
+	<input type="hidden" name="amount" value="${pageMaker.cri.amount }" />
+</form>
+
 
 <!-- 모달창  -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="ture">
@@ -88,7 +112,23 @@ $(document).ready(function() {
 		}
 		$("#myModal").modal("show");
 	}
-
+	
+	//페이지 이동할때 히든값 넘기기
+	var actionForm = $("#actionForm");
+	$(".page-item a").on("click", function(e) {
+		e.preventDefault();
+		console.log("click");
+		actionForm.find("input[name='pageNum']").val($(this).attr("href"));
+		actionForm.submit();
+	});
+	
+	//제목 클릭시 상세 페이지로 넘기기
+	$(".move").on("click",function(e) {
+		e.preventDefault();
+		actionForm.append("<input type='hidden' name='bno' value='" + $(this).attr("href") + "'>");
+		actionForm.attr("action", "/board/get");
+		actionForm.submit();
+	});
 });
 </script>
 

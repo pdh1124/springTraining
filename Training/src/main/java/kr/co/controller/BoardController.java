@@ -3,6 +3,7 @@ package kr.co.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.co.domain.BoardVO;
 import kr.co.domain.Criteria;
+import kr.co.domain.PageDTO;
 import kr.co.service.BoardService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -28,6 +30,7 @@ public class BoardController {
 	public void list(Model model, Criteria cri) {
 		log.info("list" + cri);
 		model.addAttribute("list", service.getList(cri));
+		model.addAttribute("pageMaker", new PageDTO(cri, 190));
 	}
 	
 	@GetMapping("/register")
@@ -45,7 +48,7 @@ public class BoardController {
 	}
 	
 	@GetMapping({"/get", "/modify"})
-	public void get(@RequestParam("bno") Long bno, Model model) {
+	public void get(@RequestParam("bno") Long bno, Model model, @ModelAttribute("cri") Criteria cri) {	
 		log.info("/get");
 		model.addAttribute("board", service.get(bno));
 	}
