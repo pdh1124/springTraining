@@ -15,6 +15,8 @@
 					<div class="form-group">
 						<label>게시물번호</label>
 						<input class="form-control" name="bno" value='<c:out value="${board.bno }"/>' readonly="readonly">
+						<input type="hidden" name="pageNum" value="${cri.pageNum }">
+						<input type="hidden" name="amount" value="${cri.amount }">
 					</div>
 					
 					<div class="form-group">
@@ -60,8 +62,15 @@
 			if(operation === 'remove') {
 				formObj.attr("action", "/board/remove");
 			} else if(operation === 'list') {
-				self.location = "/board/list";
-				return;
+				formObj.attr("action", "/board/list").attr("mothod", "get");
+				
+				var pageNumTag = $("input[name='pageNum']");
+				var amountTag = $("input[name='amount']");
+				
+				formObj.empty();
+				
+				formObj.append(pageNumTag);
+				formObj.append(amountTag);
 			}
 			formObj.submit();
 		});

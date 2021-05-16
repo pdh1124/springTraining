@@ -33,7 +33,9 @@
 				<button data-oper="list" class="btn btn-info">목록</button>
 				
 				<form id="operForm" action="/board/modify" method="get">
-					<input type="hidden" id="bno" name="bno" value="${board.bno }" />				
+					<input type="hidden" id="bno" name="bno" value="${board.bno }" />
+					<input type="hidden" name="pageNum" value="${cri.pageNum }" />
+					<input type="hidden" name="amount" value="${cri.amount }" />				
 				</form>
 			</div>
 		</div>
