@@ -45,15 +45,15 @@
 <div>
 	<ul class="pagination justify-content-center">
 		<c:if test="${pageMaker.prev }">
-			<li class="page-item previous"><a href="${pageMaker.startPage-1 }">&lt;</a></li>
+			<li class="page-item previous"><a class="page-link" href="${pageMaker.startPage-1 }">&lt;</a></li>
 		</c:if>
-		<c:forEach var="num" begin="${pageMaker.startPage }" end="${pageMaker.endPage }">
-			<li class="page-item ${pageMaker.cri.pageNum == num?'active':'' }">
-				<a href="${num }" class="page-link">${num }</a>
-			</li>
-		</c:forEach>
-		<c:if test="${pageMaker.naxt }">
-			<li class="page-item next"><a href="${pageMaker.endPage+1 }">&gt;</a></li>
+		<c:forEach var="num" begin="${pageMaker.startPage }" end="${pageMaker.endPage }">      		
+   			<li class='page-item ${pageMaker.cri.pageNum == num?"active":"" }'>
+   				<a href="${num }" class="page-link">${num }</a>
+   			</li>
+   		</c:forEach>
+		<c:if test="${pageMaker.next }">
+			<li class="page-item next"><a class="page-link" href="${pageMaker.endPage+1 }">&gt;</a></li>
 		</c:if>
 	</ul>
 </div>

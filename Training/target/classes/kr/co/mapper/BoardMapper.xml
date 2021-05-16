@@ -45,4 +45,10 @@
 		]]>
 	</select>
 	
+	<select id="getTotalCount" resultType="int">
+	<![CDATA[
+		select count(bno) from tbl_board where bno > 0
+	]]>
+	</select>
+	
 </mapper>
