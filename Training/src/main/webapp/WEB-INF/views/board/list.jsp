@@ -38,57 +38,78 @@
                 </tbody>
             </table>
         </div>
-    </div>
-    
-    
-    <!-- 검색상자 -->
-	<div>
-		<div class="col-lg-12">
-			<form id="searchForm" action="/board/list" method="get">
-				&nbsp;&nbsp;&nbsp;
-				<select name="type">
-					<option value="" ${pageMaker.cri.type == null?"selected":"" }>--</option>
-					<option value="T" ${pageMaker.cri.type eq "T"?"selected":"" }>제목</option>
-					<option value="C" ${pageMaker.cri.type eq "C"?"selected":"" }>내용</option>
-					<option value="W" ${pageMaker.cri.type eq "W"?"selected":"" }>작성자</option>
-					<option value="TC" ${pageMaker.cri.type eq "TC"?"selected":"" }>제목 + 내용</option>
-					<option value="TW" ${pageMaker.cri.type eq "TW"?"selected":"" }>제목 + 작성자</option>
-					<option value="WC" ${pageMaker.cri.type eq "WC"?"selected":"" }>내용 + 작성자</option>
-					<option value="TWC" ${pageMaker.cri.type eq "TWC"?"selected":"" }>제목 + 내용 + 작성자</option>
-				</select>
-				<input type="text" name="keyword" value="${pageMaker.cri.keyword }" />
-				<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum }" />
-				<input type="hidden" name="amount" value="${pageMaker.cri.pageNum }" />
-				<button class="btn btn-warning">검색</button>
-			</form>
+        
+        
+        <!-- 검색상자 -->
+		<div>
+			<div class="col-lg-12">
+				<form id="searchForm" action="/board/list" method="get">
+					<select name="type">
+						<option value="" ${pageMaker.cri.type == null?"selected":"" }>--</option>
+						<option value="T" ${pageMaker.cri.type eq "T"?"selected":"" }>제목</option>
+						<option value="C" ${pageMaker.cri.type eq "C"?"selected":"" }>내용</option>
+						<option value="W" ${pageMaker.cri.type eq "W"?"selected":"" }>작성자</option>
+						<option value="TC" ${pageMaker.cri.type eq "TC"?"selected":"" }>제목 + 내용</option>
+						<option value="TW" ${pageMaker.cri.type eq "TW"?"selected":"" }>제목 + 작성자</option>
+						<option value="WC" ${pageMaker.cri.type eq "WC"?"selected":"" }>내용 + 작성자</option>
+						<option value="TWC" ${pageMaker.cri.type eq "TWC"?"selected":"" }>제목 + 내용 + 작성자</option>
+					</select>
+					<input type="text" name="keyword" value="${pageMaker.cri.keyword }" />
+					<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum }" />
+					<input type="hidden" name="amount" value="${pageMaker.cri.amount }" />
+					<button class="btn btn-warning">검색</button>
+				</form>
+			</div>
 		</div>
-	</div>
-	
-	<!-- 페이징 -->
-	<div>
-		<ul class="pagination justify-content-center">
-			<c:if test="${pageMaker.prev }">
-				<li class="page-item previous"><a class="page-link" href="${pageMaker.startPage-1 }">&lt;</a></li>
-			</c:if>
-			<c:forEach var="num" begin="${pageMaker.startPage }" end="${pageMaker.endPage }">      		
-	   			<li class='page-item ${pageMaker.cri.pageNum == num?"active":"" }'>
-	   				<a href="${num }" class="page-link">${num }</a>
-	   			</li>
-	   		</c:forEach>
-			<c:if test="${pageMaker.next }">
-				<li class="page-item next"><a class="page-link" href="${pageMaker.endPage+1 }">&gt;</a></li>
-			</c:if>
-		</ul>
-	</div>
-	
-	<!-- 히든값으로 넘길 정보 -->
-	<form id="actionForm" action="/board/list" method="get">
-		<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum }" />
-		<input type="hidden" name="amount" value="${pageMaker.cri.amount }" />
-		<input type="hidden" name="type" value="${pageMaker.cri.type }" />
-		<input type="hidden" name="keyword" value="${pageMaker.cri.keyword }" />
-	</form>
-    
+		
+		<!-- div>
+        	<div class="col-lg-12">
+        		<form id="searchForm" action="/board/list" method="get">
+        			&nbsp;&nbsp;&nbsp;
+        			<select name="type">
+        				<option value="" ${pageMaker.cri.type == null?"selected":"" }>--</option>
+        				<option value="T" ${pageMaker.cri.type eq "T"?"selected":"" }>제목</option>
+        				<option value="C" ${pageMaker.cri.type eq "C"?"selected":"" }>내용</option>
+        				<option value="W" ${pageMaker.cri.type eq "W"?"selected":"" }>작성자</option>
+        				<option value="TC" ${pageMaker.cri.type eq "TC"?"selected":"" }>제목+내용</option>
+        				<option value="TW" ${pageMaker.cri.type eq "TW"?"selected":"" }>제목+작성자</option>
+        				<option value="WC" ${pageMaker.cri.type eq "WC"?"selected":"" }>내용+작성자</option>
+        				<option value="TWC" ${pageMaker.cri.type eq "TWC"?"selected":"" }>제목+내용+작성자</option>
+        			</select>
+        			<input type="text" name="keyword" value="${pageMaker.cri.keyword }" />
+        			<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum }" />
+        			<input type="hidden" name="amount" value="${pageMaker.cri.amount }" />
+        			<button class="btn btn-warning">Search</button>
+        		</form>
+        	</div>
+        </div-->
+        <!-- 검색 상자 끝 -->
+		
+		<!-- 페이징 -->
+		<div>
+			<ul class="pagination justify-content-center">
+				<c:if test="${pageMaker.prev }">
+					<li class="page-item previous"><a class="page-link" href="${pageMaker.startPage-1 }">&lt;</a></li>
+				</c:if>
+				<c:forEach var="num" begin="${pageMaker.startPage }" end="${pageMaker.endPage }">      		
+		   			<li class='page-item ${pageMaker.cri.pageNum == num?"active":"" }'>
+		   				<a href="${num }" class="page-link">${num }</a>
+		   			</li>
+		   		</c:forEach>
+				<c:if test="${pageMaker.next }">
+					<li class="page-item next"><a class="page-link" href="${pageMaker.endPage+1 }">&gt;</a></li>
+				</c:if>
+			</ul>
+		</div>
+		
+		<!-- 히든값으로 넘길 정보 -->
+		<form id="actionForm" action="/board/list" method="get">
+			<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum }" />
+			<input type="hidden" name="amount" value="${pageMaker.cri.amount }" />
+			<input type="hidden" name="type" value="${pageMaker.cri.type }" />
+			<input type="hidden" name="keyword" value="${pageMaker.cri.keyword }" />
+		</form>
+    </div>   
 </div>
 
 
@@ -163,7 +184,7 @@ $(document).ready(function() {
 	});
 	
 	//검색기능
-	var serachForm = $("#serachForm");
+	var searchForm = $("#serachForm");
 	$("#searchForm button").on("click", function(e) {
 		if(!searchForm.find("option:selected").val()) {
 			alert("검색 종류를 선택하세요");
