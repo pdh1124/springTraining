@@ -12,13 +12,13 @@
 			<div class="panel-heading"><strong style="font-size:24px">글 수정</strong></div>
 			<div class="panel-body">
 				<form role="form" action="/board/modify" method="post">
-					<div class="form-group">
-						<label>게시물번호</label>
-						<input class="form-control" name="bno" value='<c:out value="${board.bno }"/>' readonly="readonly">
+			
+						<input type="hidden" name="bno" value="${board.bno }" />
 						<input type="hidden" name="pageNum" value="${cri.pageNum }">
 						<input type="hidden" name="amount" value="${cri.amount }">
-					</div>
-					
+						<input type="hidden" name="type" value="${cri.type }">
+						<input type="hidden" name="keyword" value="${cri.keyword }">
+								
 					<div class="form-group">
 						<label>Title</label> 
 						<input class="form-control" name="title" value='<c:out value="${board.title }"/>' >
@@ -66,11 +66,15 @@
 				
 				var pageNumTag = $("input[name='pageNum']");
 				var amountTag = $("input[name='amount']");
+				var typeTag = $("input[name='type']");
+				var keywordTag = $("input[name='keyword']");
 				
 				formObj.empty();
 				
 				formObj.append(pageNumTag);
 				formObj.append(amountTag);
+				formObj.append(typeTag);
+				formObj.append(keywordTag);
 			}
 			formObj.submit();
 		});

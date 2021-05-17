@@ -73,11 +73,21 @@ public class BoardControllerTests {
 //		log.info(result);
 //	}
 	
+//	@Test
+//	public void testList2() throws Exception {
+//		log.info(mockMvc.perform(MockMvcRequestBuilders.get("/board/list")
+//				.param("pageNum", "2")
+//				.param("amount", "10"))
+//				.andReturn().getModelAndView().getModelMap());
+//	}
+	
 	@Test
-	public void testList2() throws Exception {
+	public void testList3() throws Exception {
 		log.info(mockMvc.perform(MockMvcRequestBuilders.get("/board/list")
 				.param("pageNum", "2")
-				.param("amount", "10"))
+				.param("amount", "10")
+				.param("type", "TW")
+				.param("keyword", "테스트"))
 				.andReturn().getModelAndView().getModelMap());
 	}
 }
