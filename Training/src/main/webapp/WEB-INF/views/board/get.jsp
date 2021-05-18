@@ -113,19 +113,87 @@
 		
 		var bnoValue = '<c:out value="${board.bno}" />';
 		
-		replyService.add({
+		/*replyService.add({
 			reply: "js test",
 			replyer : "tester",
 			bno : bnoValue
 		}, function(result) {
 			alert("result: " + result);
-		});
+		});*/
 		
 		
 		var modal = $("#myModal");
-		var modalInputReplyDate = modal.find("input[name='replyDate']");
-		var modalRegisterBtn = $("modalResgisterBtn");
+		var modalRegisterBtn = $("#modalRegisterBtn");
 		var modalInputReply = modal.find("input[name='reply']");
+		var modalInputReplyer = modal.find("input[name='replyer']");
+		var modalInputReplyDate = modal.find("input[name='replyDate']");
+		
+		//댓글달기 버튼을 눌렀을 때 모달창이 보이는 명령
+		$("#addReplyBtn").on("click",function(e) {
+			modal.find("input").val("");
+			modalInputReplyDate.closest("div").hide();
+			modal.find("button[id != 'modalCloseBtn']").hide();
+			modalRegisterBtn.show();
+			$("#myModal").modal("show");
+		});
+		
+		//닫기버튼을 눌렀을때 모달찰이 닫히는 명령
+		$("#modalCloseBtn").on("click", function(e) {
+			modal.modal("hide");
+		});
+		
+		//등록버튼을 눌렀을때 등록되는 명령
+		modalRegisterBtn.on("click", function(e) {
+			
+			var reply = {
+					reply: modalInputReply.val(),
+					replyer: modalInputReplyer.val(),
+					bno: bnoValue
+			};
+			replyService.add(reply, function(result) {
+				alert(result);
+				modal.find("input").val("");
+				modal.modal("hide");
+			})
+		});
+		
+		/*replyService.getList({
+			bno: bnoValue,
+			page: 1
+		}, function(list) {
+			for (var i = 0, len = list.length || 0; i < len; i++) {
+				console.log(list[i]);
+			}
+		});*/
+		
+		//상세페이지 댓글 구현
+		var replyUL = $(".chat");
+		
+		function showList(page) {
+			replyService.getList({
+				bno: bnoValue,
+				page: page || 1
+			}, function(list) {
+				var str = "";
+				if(list == null || list.length == 0) {
+					replyUL.html("");
+					return;
+				}
+				for(var i = 0, len = list.length || 0; i <len; i++) {
+					str += "<li class='left clearfix' data-rno='" + list[i].rno + "'>";
+					str += "<div>";
+					str += "<div class='header'>";
+					str += "<strong class='primary-font'>" + list[i].replyer + "</strong>";
+					str += "<small class='float-sm-right'>" + list[i].replyDate + "</small>";
+					str += "</div>";
+					str += "<p>" + list[i].reply + "</p>";
+					str += "</div>";
+					str += "</li>";
+				}
+				replyUL.html(str);
+			})
+		}
+		showList(1);
 	});
 </script>
 
