@@ -44,6 +44,60 @@
 	</div>
 </div>
 
+<!-- 댓글 목록 -->
+<br />
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<i class="fa fa-comments fa-fw"></i> 댓글 목록
+				<button id="addReplyBtn" class="btn btn-primary btn-xs float-right">댓글 달기</button>
+			</div>
+			<br />
+			<div class="panel-body">
+				<ul class="chat">
+					<li>테스트</li>
+				</ul>
+			</div> 
+			<div class="panel-footer"></div>
+		</div>
+	</div>
+</div>
+
+<!-- 댓글을 입력할 모달 창 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			
+			<div class="modal-header">
+				<h4 class="modal-title" id="myModalLabel">댓글 창</h4>
+			</div>
+			
+			<div class="modal-body">
+				<div class="form-group">
+					<label>댓글</label> 
+					<input class="form-control" name="reply" value="새 댓글">
+				</div>
+				<div class="form-group">
+					<label>작성자</label> 
+					<input class="form-control" name="replyer" value="replyer">
+				</div>
+				<div class="form-group">
+					<label>댓글 작성일</label> 
+					<input class="form-control" name="replyDate" value="">
+				</div>
+			</div>
+			
+			<div class="modal-footer">
+				<button id="modalModBtn" type="button" class="btn btnwarning">수정</button>
+				<button id="modalRemoveBtn" type="button" class="btn btndanger">삭제</button>
+				<button id="modalRegisterBtn" type="button" class="btn btnprimary">등록</button>
+				<button id="modalCloseBtn" type="button" class="btn btndefault">닫기</button>
+			</div>	
+		</div>
+	</div>
+</div>
+
 <%@ include file="../includes/footer.jsp"%>
 
 <script>
@@ -56,5 +110,25 @@
 			operForm.find("#bno").remove();
 			operForm.attr("action", "/board/list").submit();
 		});
+		
+		var bnoValue = '<c:out value="${board.bno}" />';
+		
+		replyService.add({
+			reply: "js test",
+			replyer : "tester",
+			bno : bnoValue
+		}, function(result) {
+			alert("result: " + result);
+		});
+		
+		
+		var modal = $("#myModal");
+		var modalInputReplyDate = modal.find("input[name='replyDate']");
+		var modalRegisterBtn = $("modalResgisterBtn");
+		var modalInputReply = modal.find("input[name='reply']");
 	});
 </script>
+
+
+
+<script type="text/javascript" src="/resources/js/reply.js"></script>
