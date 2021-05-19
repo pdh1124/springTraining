@@ -55,7 +55,7 @@ var replyService = (function() {
 			var mi = dateObj.getMinutes();
 			var ss = dateObj.getSeconds();
 			
-			return [(hh>9?'':'0')+hh, ':', (mi>9?'':'0')+mi, ':' (ss>9?'':'0')+ss].join('');
+			return [ (hh>9?'':'0')+hh, ':', (mi>9?'':'0')+mi, ':',(ss>9?'':'0')+ss].join('');
 		} else {
 			var yy = dateObj.getFullYear();
 			var mm = dateObj.getMonth()+1;
@@ -65,9 +65,45 @@ var replyService = (function() {
 		}
 	}
 	
+	//수정처리
+	function update(reply, callback, error) {
+		console.log("rno: " + reply.rno);
+		ajax({
+			type: 'put',
+			url: '/replies/' + reply.rno,
+			data: JSON.stringify(reply),
+			contentType: "application/json;charset=utf-8",
+			success: function(result, status, xhr) {
+				if(callback) {
+					callback(result);
+				}
+			},
+			error: function(xhr, status, er) {
+				if(error){
+					error(er);
+				}
+			}
+		})
+	}
+	
+	//댓글읽기
+	function get(rno, callback, error) {
+		$.get("/reples/" + rno + ".json", function(result) {
+			if(callback) {
+				callback(result);
+			}
+		}).fail(function(xhr, status, er) {
+			if(error) {
+				error(er);
+			}
+		})
+	}
+	
 	return {
 		add: add,
 		getList:getList,
-		displayTime:displayTime
+		displayTime:displayTime,
+		update:update,
+		get:get
 	};
 })();

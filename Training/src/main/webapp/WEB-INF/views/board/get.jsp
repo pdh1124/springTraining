@@ -154,6 +154,7 @@
 				alert(result);
 				modal.find("input").val("");
 				modal.modal("hide");
+				showList(-1);
 			})
 		});
 		
@@ -165,6 +166,13 @@
 				console.log(list[i]);
 			}
 		});*/
+		
+		//댓글을 클릭하면 수정하는 기능
+		$(".chat").on("click",function(e) {
+			var rno = $(this).data("rno");
+			console.log(rno);
+		});
+		
 		
 		//상세페이지 댓글 구현
 		var replyUL = $(".chat");
@@ -184,7 +192,7 @@
 					str += "<div>";
 					str += "<div class='header'>";
 					str += "<strong class='primary-font'>" + list[i].replyer + "</strong>";
-					str += "<small class='float-sm-right'>" + list[i].replyDate + "</small>";
+					str += "<small class='float-sm-right'>" + replyService.displayTime(list[i].replyDate) + "</small>";
 					str += "</div>";
 					str += "<p>" + list[i].reply + "</p>";
 					str += "</div>";
