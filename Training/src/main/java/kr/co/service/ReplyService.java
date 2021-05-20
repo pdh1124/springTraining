@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import kr.co.domain.Criteria;
+import kr.co.domain.ReplyPageDTO;
 import kr.co.domain.ReplyVO;
 
 public interface ReplyService {
@@ -13,4 +14,7 @@ public interface ReplyService {
 	public int remove(Long rno);
 	public int modify(ReplyVO reply);
 	public List<ReplyVO> getList(@Param("cri") Criteria cri, @Param("bno") Long bno);
+	
+	public ReplyPageDTO getListPage(Criteria cri, Long bno);
+	
 }

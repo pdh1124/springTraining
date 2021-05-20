@@ -34,7 +34,7 @@ var replyService = (function() {
 		$.getJSON("/replies/pages/" + bno + "/" + page + ".json",
 			function(data) {
 				if(callback) {
-					callback(data);
+					callback(data.replyCnt, data.list);
 				}
 			}).fail(function(xhr, status, err) {
 				if(error) {
@@ -68,7 +68,7 @@ var replyService = (function() {
 	//수정처리
 	function update(reply, callback, error) {
 		console.log("rno: " + reply.rno);
-		ajax({
+		$.ajax({
 			type: 'put',
 			url: '/replies/' + reply.rno,
 			data: JSON.stringify(reply),
@@ -88,7 +88,7 @@ var replyService = (function() {
 	
 	//댓글읽기
 	function get(rno, callback, error) {
-		$.get("/reples/" + rno + ".json", function(result) {
+		$.get("/replies/" + rno + ".json", function(result) {
 			if(callback) {
 				callback(result);
 			}
@@ -99,11 +99,30 @@ var replyService = (function() {
 		})
 	}
 	
+	//삭제처리
+	function remove(rno, callback, error) {
+		$.ajax({
+			type: 'delete',
+			url: '/replies/' + rno,
+			success: function(deleteResult, status, xhr) {
+				if(callback) {
+					callback(deleteResult);
+				}
+			},
+			error: function(xhr, status, er) {
+				if(error) {
+					error(er);
+				}
+			}
+		});
+	}
+	
 	return {
 		add: add,
 		getList:getList,
 		displayTime:displayTime,
 		update:update,
-		get:get
+		get:get,
+		remove:remove
 	};
 })();

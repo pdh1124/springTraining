@@ -1,6 +1,6 @@
 package kr.co.mapper;
 
-import java.util.stream.IntStream;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import kr.co.domain.Criteria;
 import kr.co.domain.ReplyVO;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -22,17 +23,26 @@ public class ReplyMapperTests {
 	@Setter(onMethod_ = @Autowired)
 	private ReplyMapper mapper;
 	
+//	@Test
+//	public void testCreate() {
+//		IntStream.rangeClosed(1,10).forEach(i -> {
+//			ReplyVO vo = new ReplyVO();
+//			
+//			vo.setBno(bnoArr[i % 5]);
+//			vo.setReply("댓글테스트"+ i);
+//			vo.setReplyer("replyer"+ i);
+//			
+//			mapper.insert(vo);
+//		});
+//	}
+	
 	@Test
-	public void testCreate() {
-		IntStream.rangeClosed(1,10).forEach(i -> {
-			ReplyVO vo = new ReplyVO();
-			
-			vo.setBno(bnoArr[i % 5]);
-			vo.setReply("댓글테스트"+ i);
-			vo.setReplyer("replyer"+ i);
-			
-			mapper.insert(vo);
-		});
+	public void testList2() {
+		Criteria cri = new Criteria(2, 10);
+	
+		List<ReplyVO> replies = mapper.getListWithPaging(cri, 123L);
+		
+		replies.forEach(reply -> log.info(reply));
 	}
 	
 }

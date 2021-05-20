@@ -100,12 +100,16 @@
 
 <%@ include file="../includes/footer.jsp"%>
 
+<script type="text/javascript" src="/resources/js/reply.js"></script>
+
 <script>
 	$(document).ready(function(){
+		
 		var operForm = $("#operForm");
 		$('button[data-oper="modify"]').on("click", function(e) {
 			operForm.attr("action", "/board/modify").submit();
 		});
+		
 		$('button[data-oper="list"]').on("click", function(e) {
 			operForm.find("#bno").remove();
 			operForm.attr("action", "/board/list").submit();
@@ -127,8 +131,11 @@
 		var modalInputReply = modal.find("input[name='reply']");
 		var modalInputReplyer = modal.find("input[name='replyer']");
 		var modalInputReplyDate = modal.find("input[name='replyDate']");
+	
+		var modalModBtn = $("#modalModBtn");
+		var modalRemoveBtn = $("#modalRemoveBtn");
 		
-		//댓글달기 버튼을 눌렀을 때 모달창이 보이는 명령
+		//댓글 달기 버튼을 눌렀을 때 모달창이 보이는 명령
 		$("#addReplyBtn").on("click",function(e) {
 			modal.find("input").val("");
 			modalInputReplyDate.closest("div").hide();
@@ -144,7 +151,6 @@
 		
 		//등록버튼을 눌렀을때 등록되는 명령
 		modalRegisterBtn.on("click", function(e) {
-			
 			var reply = {
 					reply: modalInputReply.val(),
 					replyer: modalInputReplyer.val(),
@@ -167,12 +173,49 @@
 			}
 		});*/
 		
-		//댓글을 클릭하면 수정하는 기능
-		$(".chat").on("click",function(e) {
-			var rno = $(this).data("rno");
-			console.log(rno);
+		//댓글 모달창에서 수정 버튼을 눌렀을때 동작하는 부분
+		modalModBtn.on("click", function(e) {
+			var reply = {
+					rno: modal.data("rno"),
+					reply: modalInputReply.val()
+			};
+			replyService.update(reply, function(result) {
+				alert(result);
+				modal.modal("hide");
+				showList(-1);
+			});
 		});
 		
+		//댓글 모달창에서 삭제버튼 눌렀을때 삭제 되는 기능
+		modalRemoveBtn.on("click", function(e) {
+			var rno = modal.data("rno");
+			replyService.remove(rno, function(result) {
+				alert(result);
+				modal.modal("hide");
+				showList(-1);
+			});
+		});
+		
+		//댓글을 클릭하면 수정하는 기능
+		$(".chat").on("click", "li", function(e) {
+			var rno = $(this).data("rno");
+			console.log(rno);
+			
+			replyService.get(rno,function(reply) {
+				modalInputReply.val(reply.reply);
+				modalInputReplyer.val(reply.replyer);
+				modalInputReplyDate.closest("div").show();
+				modalInputReplyDate.val(replyService.displayTime(reply.replyDate)).attr("readonly","readonly");
+				
+				modal.data("rno",reply.rno);
+				
+				modal.find("button[id != 'modalCloseBtn']").hide();
+				modalModBtn.show();
+				modalRemoveBtn.show();
+				
+				$("#myModal").modal("show");
+			})
+		});	
 		
 		//상세페이지 댓글 구현
 		var replyUL = $(".chat");
@@ -181,7 +224,18 @@
 			replyService.getList({
 				bno: bnoValue,
 				page: page || 1
-			}, function(list) {
+			}, 
+			function(replyCnt, list) {
+				
+				console.log("replyCnt: " + replyCnt);
+				
+				if(page == -1) {
+					pageNum = Math.ceil(replyCnt/10.0);
+					console.log("page: " + pageNum);
+					showList(pageNum);
+					return;
+				}
+				
 				var str = "";
 				if(list == null || list.length == 0) {
 					replyUL.html("");
@@ -199,12 +253,54 @@
 					str += "</li>";
 				}
 				replyUL.html(str);
+				showReplyPage(replyCnt);
 			})
 		}
 		showList(1);
+		
+		//댓글 페이징 처리
+		var pageNum = 1;
+		var replyPageFooter = $(".panel-footer");
+		
+		function showReplyPage(replyCnt) {
+			var endNum = Math.ceil(pageNum/10.0) * 10;
+			var startNum = endNum - 9;
+			var prev = startNum != 1;
+			var next = false;
+			
+			if(endNum * 10 >= replyCnt) {
+				endNum = Math.ceil(replyCnt / 10.0);
+			}
+			if(endNum * 10 < replyCnt) {
+				next = true;
+			}
+			var str = "<ul class='pagination justify-content-center'>"; 
+			if(prev) {
+				str += "<li class='page-item'>";
+				str += "<a class='page-link' href='" + (startNum - 1) + "'>이전</a>";
+				str += "</li>";
+			}
+			for(var i = startNum; i <= endNum; i++) {
+				var active = pageNum == i ? "active" : "";
+				str += "<li class='page-item " + active + "'>";
+				str += "<a class='page-link' href='" + i + "'>" + i + "</a>";
+				str += "</li>";
+			}
+			if(next) {
+				str += "<li class='page-item'>";
+				str += "<a class='page-link' href='" + (endNum + 1) + "'>다음</a>";
+				str += "</li>";
+			}
+			str += "</ul>";
+			console.log(str);
+			replyPageFooter.html(str);
+		}
+		
+		replyPageFooter.on("click", "li a", function(e) {
+			e.preventDefault();
+			var targetPageNum = $(this).attr("href");
+			pageNum = targetPageNum;
+			showList(pageNum);
+		});
 	});
 </script>
-
-
-
-<script type="text/javascript" src="/resources/js/reply.js"></script>
