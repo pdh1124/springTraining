@@ -29,7 +29,11 @@
                 	<c:forEach var="board" items="${list }">
 	                	<tr>
 	                    	<td><c:out value="${board.bno }" /></td>
-	                    	<td><a href="${board.bno }" class="move"><c:out value="${board.title }" /></a></td>	              
+	                    	<td><a href="${board.bno }" class="move"><c:out value="${board.title }" />
+	                    		<c:if test="${board.replyCnt ne 0 }">
+	                    			<span style="color:red"><c:out value="[${board.replyCnt}]" /></span>
+	                    		</c:if>
+	                    	</a></td>	              
 	                    	<td><c:out value="${board.writer }" /></td>
 	                    	<td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.regdate }" /></td>
 	                    	<td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.updateDate }" /></td>
@@ -61,29 +65,6 @@
 				</form>
 			</div>
 		</div>
-		
-		<!-- div>
-        	<div class="col-lg-12">
-        		<form id="searchForm" action="/board/list" method="get">
-        			&nbsp;&nbsp;&nbsp;
-        			<select name="type">
-        				<option value="" ${pageMaker.cri.type == null?"selected":"" }>--</option>
-        				<option value="T" ${pageMaker.cri.type eq "T"?"selected":"" }>제목</option>
-        				<option value="C" ${pageMaker.cri.type eq "C"?"selected":"" }>내용</option>
-        				<option value="W" ${pageMaker.cri.type eq "W"?"selected":"" }>작성자</option>
-        				<option value="TC" ${pageMaker.cri.type eq "TC"?"selected":"" }>제목+내용</option>
-        				<option value="TW" ${pageMaker.cri.type eq "TW"?"selected":"" }>제목+작성자</option>
-        				<option value="WC" ${pageMaker.cri.type eq "WC"?"selected":"" }>내용+작성자</option>
-        				<option value="TWC" ${pageMaker.cri.type eq "TWC"?"selected":"" }>제목+내용+작성자</option>
-        			</select>
-        			<input type="text" name="keyword" value="${pageMaker.cri.keyword }" />
-        			<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum }" />
-        			<input type="hidden" name="amount" value="${pageMaker.cri.amount }" />
-        			<button class="btn btn-warning">Search</button>
-        		</form>
-        	</div>
-        </div-->
-        <!-- 검색 상자 끝 -->
 		
 		<!-- 페이징 -->
 		<div>

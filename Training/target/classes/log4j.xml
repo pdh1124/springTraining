@@ -11,10 +11,21 @@
 	</appender>
 	
 	<!-- Application Loggers -->
-	<logger name="kr.co.training">
+	<logger name="kr.co.controller">
 		<level value="info" />
 	</logger>
 		
+	<logger name="jdbc.audit">
+		<level value="fatal" /> 
+	</logger>
+
+	<logger name="jdbc.resultset">
+		<level value="warn" /> 
+	</logger>
+
+	<logger name="jdbc.connection">
+		<level value="warn" />
+	</logger>
 
 		
 	<!-- 3rdparty Loggers -->

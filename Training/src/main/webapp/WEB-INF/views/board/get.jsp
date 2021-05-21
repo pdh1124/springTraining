@@ -9,7 +9,7 @@
 <div class="card shadow mb-4">
 	<div class="card-body">
 		<div class="table-responsive">
-			<div class="panel-heading">글 읽기</div>
+			<div class="panel-heading"><strong style="font-size:24px">글 읽기</strong></div>
 			<div class="panel-body">	
 				<div class="form-group">
 					게시물번호 <input class="form-control" name="bno" value='<c:out value="${board.bno }"/>' readonly="readonly" >
@@ -29,7 +29,12 @@
 					<input class="form-control" name="writer" value='<c:out value="${board.writer }"/>' readonly="readonly" >
 				</div>
 				
-				<button data-oper="modify"class="btn btn-warning">수정</button>
+				<sec:authentication property="principal" var="pinfo" />
+				<sec:authorize access="isAuthenticated()">
+					<c:if test="${pinfo.username eq board.writer }">
+						<button data-oper="modify" class="btn btn-warning">수정</button>
+					</c:if>
+				</sec:authorize>
 				<button data-oper="list" class="btn btn-info">목록</button>
 				
 				<form id="operForm" action="/board/modify" method="get">
@@ -44,6 +49,21 @@
 	</div>
 </div>
 
+<!-- 첨부파일 -->
+<br />
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">첨부파일</div>
+			<div class="panel-body">
+				<div class="uploadResult">
+					<ul></ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- 댓글 목록 -->
 <br />
 <div class="row">
@@ -51,7 +71,9 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<i class="fa fa-comments fa-fw"></i> 댓글 목록
-				<button id="addReplyBtn" class="btn btn-primary btn-xs float-right">댓글 달기</button>
+				<sec:authorize access="isAuthenticated()">
+					<button id="addReplyBtn" class="btn btn-primary btn-xs float-right">댓글 달기</button>
+				</sec:authorize>
 			</div>
 			<br />
 			<div class="panel-body">
@@ -105,6 +127,15 @@
 <script>
 	$(document).ready(function(){
 		
+		
+		var csrfHeaderName = "${_csrf.headerName}";
+		var csrfTokenValue = "${_csrf.token}";
+		
+		$(document).ajaxSend(function(e,xhr,options) {
+			xhr.setRequestHeader(csrfHeaderName,csrfTokenValue);
+		});
+		
+		
 		var operForm = $("#operForm");
 		$('button[data-oper="modify"]').on("click", function(e) {
 			operForm.attr("action", "/board/modify").submit();
@@ -125,6 +156,10 @@
 			alert("result: " + result);
 		});*/
 		
+		var replyer = null;
+		<sec:authorize access="isAuthenticated()">
+			replyer='${pinfo.username}';
+		</sec:authorize>
 		
 		var modal = $("#myModal");
 		var modalRegisterBtn = $("#modalRegisterBtn");
@@ -138,6 +173,10 @@
 		//댓글 달기 버튼을 눌렀을 때 모달창이 보이는 명령
 		$("#addReplyBtn").on("click",function(e) {
 			modal.find("input").val("");
+			
+			modal.find("input[name='replyer']").val(replyer);
+			modal.find("input[name='replyer']").attr("readonly","readonly");
+			
 			modalInputReplyDate.closest("div").hide();
 			modal.find("button[id != 'modalCloseBtn']").hide();
 			modalRegisterBtn.show();
@@ -156,12 +195,18 @@
 					replyer: modalInputReplyer.val(),
 					bno: bnoValue
 			};
+			
+			var reply_con=modalInputReply.val();console.log("reply_con:"+reply_con);
+      		 if(reply_con=="") {
+       			return;
+    		 };
+			
 			replyService.add(reply, function(result) {
 				alert(result);
 				modal.find("input").val("");
 				modal.modal("hide");
 				showList(-1);
-			})
+			});
 		});
 		
 		/*replyService.getList({
@@ -175,10 +220,25 @@
 		
 		//댓글 모달창에서 수정 버튼을 눌렀을때 동작하는 부분
 		modalModBtn.on("click", function(e) {
+			var originalReplyer = modalInputReplyer.val();
 			var reply = {
 					rno: modal.data("rno"),
-					reply: modalInputReply.val()
+					reply: modalInputReply.val(),
+					replyer : originalReplyer
 			};
+			
+			if(!replyer) {
+				alert("로그인 후 수정 가능합니다.");
+				modal.modal("hide");
+				return;
+			}
+			
+			if(replyer != originalReplyer) {
+				alert("자신이 작성한 댓글만 수정 가능");
+				modal.modal("hide");
+				return;
+			}
+			
 			replyService.update(reply, function(result) {
 				alert(result);
 				modal.modal("hide");
@@ -189,7 +249,20 @@
 		//댓글 모달창에서 삭제버튼 눌렀을때 삭제 되는 기능
 		modalRemoveBtn.on("click", function(e) {
 			var rno = modal.data("rno");
-			replyService.remove(rno, function(result) {
+			var originalReplyer = modalInputReplyer.val();
+			
+			if(!replyer) {
+				alert("로그인 후 삭제가 가능합니다.");
+				modal.modal("hide");
+				return;
+			}
+			
+			if(replyer != originalReplyer) {
+				alert("자신이 작성한 댓글만 삭제 가능");
+				modal.modal("hide");
+				return;
+			}
+			replyService.remove(rno, originalReplyer, function(result) {
 				alert(result);
 				modal.modal("hide");
 				showList(-1);
@@ -203,7 +276,7 @@
 			
 			replyService.get(rno,function(reply) {
 				modalInputReply.val(reply.reply);
-				modalInputReplyer.val(reply.replyer);
+				modalInputReplyer.val(reply.replyer).attr("readonly","readonly");
 				modalInputReplyDate.closest("div").show();
 				modalInputReplyDate.val(replyService.displayTime(reply.replyDate)).attr("readonly","readonly");
 				
@@ -302,5 +375,35 @@
 			pageNum = targetPageNum;
 			showList(pageNum);
 		});
+		
+		//첨부파일 목록 표시
+		(function() {
+			var bno = '<c:out value="${board.bno}"/>';
+			
+			$.getJSON("/board/getAttachList", {bno:bno}, function(arr) {
+				console.log(arr);
+				var str = "";
+				
+				$(arr).each(function(i,attach) {
+					str += "<li data-path='" + attach.uploadPath + "' data-uuid='" + attach.uuid + "' data-filename='" + attach.fileName + "' data-type='" + attach.fileType + "'>";
+					str += "<div>";
+					str += "<img src='/resources/img/attach.png' width='20px'>";
+					str += "<span>&nbsp;" + attach.fileName + "</span><br />";
+					str += "</div>";
+					str += "</li>";
+				});
+				$(".uploadResult ul").html(str);
+			});
+		})();
+		
+		//첨부파일 클릭시 다운로드 처리
+		$(".uploadResult").on("click", "li", function(e) {
+			console.log("download file");
+			
+			var liObj = $(this);
+			var path = encodeURIComponent(liObj.data("path") + "/" + liObj.data("uuid") + "_" + liObj.data("filename"));
+			
+			self.location = "/download?fileName=" + path;
+		})
 	});
 </script>
