@@ -379,6 +379,9 @@
                                 	<a class="dropdown-item" href="/customLogin"> 
                                 		<i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> Login
                                 	</a>
+                                	<a class="dropdown-item" href="/customRegister"> 
+                                		<i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> sign in
+                                	</a>
                                 </sec:authorize>
                             </div>
                         </li>

@@ -31,5 +31,8 @@
   		where 
   		mem.userid=#{userid}
   	</select>
+  	
+  	<insert id="register">
+  	</insert>
 
   </mapper>
