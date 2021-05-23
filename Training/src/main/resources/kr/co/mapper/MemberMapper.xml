@@ -33,6 +33,7 @@
   	</select>
   	
   	<insert id="register">
+  		insert into tbl_memeber (userid, userpw, username) values (#{userid}, #{userpw}, #{username})
   	</insert>
 
   </mapper>
